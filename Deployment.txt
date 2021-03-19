@@ -1,50 +1,94 @@
 package com.company;
 
-import java.util.Scanner;
+public class Deployment {
+    int[] left;
+    int[] right;
+    public String str1;
+    public String bufferString = "";
+    public int marker = 0;
 
-public class Main {
+    public void findingGaps(int n, String bufferString) {
+        this.right = new int[n];
+        this.left = new int[n];
+        this.str1 = bufferString;
+        String rightString = str1;
+        String leftString = str1;
 
-    public static void main(String[] args) {
-
-        Scanner str = new Scanner(System.in);
-        String mainString = str.nextLine();
-        Deployment st = new Deployment();
-
-        if (st.checkForConstants(mainString)) {
-            int n = numberOfDeployment(mainString);
-
-            while (n > 0) {
-                st.findingGaps(n, mainString);
-                for (int l = n; l > 0; l--) {
-                    if (st.right[0] > st.left[l - 1]) {
-                        mainString = st.decomposition(st.left[l - 1], st.right[0]);
-                        break;
-                    }
-                }
-                n = numberOfDeployment(mainString);
-            }
-            if(st.marker>0){
-                System.out.println("Ошибка в вводе данных");;
-            }
-            else{
-            System.out.println(mainString);}
+        int k = 0;
+        int i = 0;
+        int l = n;
+        while (l > 0) {
+            right[i] = rightString.indexOf(']') + k;
+            k = right[i] + 1;
+            rightString = rightString.substring(rightString.indexOf(']') + 1);
+            l -= 1;
+            i += 1;
         }
-        else{
-            System.out.println("Ошибка в вводе данных");
+
+        k = 0;
+        i = 0;
+        l = n;
+        while (l > 0) {
+            left[i] = leftString.indexOf('[') + k;
+            k = left[i] + 1;
+            leftString = leftString.substring(leftString.indexOf('[') + 1);
+            l--;
+            i++;
         }
     }
-    public static int numberOfDeployment(String temporaryString){
-        int k=0;
-        int n=0;
-        while(k>=0){
-            int value = temporaryString.indexOf('[');
-            if(value>=0){
-                n+=1;
-                temporaryString=temporaryString.substring(value+1);
+
+    public String decomposition(int left, int right) {
+        bufferString = "";
+        if (right - left > 1) {
+            int x = Character.getNumericValue(str1.charAt(left - 1));
+            while (x - 1 >= 0) {
+                bufferString = bufferString.concat(str1.substring(left + 1, right));
+                x--;
             }
-            else {k--;}
+            checkGaps(bufferString);
+            return str1.substring(0, left - 1) + bufferString + str1.substring(right + 1);
+        } else return str1.substring(0, left - 1) + str1.substring(right + 1);
+    }
+
+    public boolean checkForConstants(String checkString) {
+        char[] result = checkString.toCharArray();
+        String allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]";
+        char[] allowedCharsArray = allowedChars.toCharArray();
+        int difference = 0;
+
+        for (char value : result) {
+            boolean check = false;
+            for (char c : allowedCharsArray) {
+                if (value == c) {
+                    check = true;
+                    break;
+                }
+            }
+            if (value == '[') {
+                difference++;
+            }
+            if (value == ']') {
+                difference--;
+            }
+            if (!check) {
+                return false;
+            }
+            if (checkString.lastIndexOf("[") > checkString.lastIndexOf("]"))
+                return false;
         }
-        return n;
+        return difference == 0;
+    }
+
+    public void checkGaps(String sectionString) {
+        char[] sectionArrays = sectionString.toCharArray();
+        String forbiddenSymbols = "0123456789";
+        char[] forbiddenArrays = forbiddenSymbols.toCharArray();
+        for (char value : sectionArrays) {
+            for (char c : forbiddenArrays) {
+                if (value == c) {
+                    marker++;
+                }
+            }
+        }
     }
 }
-
