@@ -7,37 +7,44 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner str = new Scanner(System.in);
-        String str1 = str.nextLine();
+        String mainString = str.nextLine();
         Deployment st = new Deployment();
 
-        int n = number_gaps(str1);
+        if (st.checkForConstants(mainString)) {
+            int n = numberOfDeployment(mainString);
 
-        while (n>0) {
-            st.finding_gaps(n,str1);
-            for(int l=n;l>0;l--){
-            if(st.right[0]>st.left[l-1]){
-                str1 = st.decomposition(st.left[l-1],st.right[0]);
-                break;
+            while (n > 0) {
+                st.findingGaps(n, mainString);
+                for (int l = n; l > 0; l--) {
+                    if (st.right[0] > st.left[l - 1]) {
+                        mainString = st.decomposition(st.left[l - 1], st.right[0]);
+                        break;
+                    }
                 }
+                n = numberOfDeployment(mainString);
             }
-        n=number_gaps(str1);
+            if(st.marker>0){
+                System.out.println("Ошибка в вводе данных");;
+            }
+            else{
+            System.out.println(mainString);}
         }
-
-        System.out.println(str1);
+        else{
+            System.out.println("Ошибка в вводе данных");
+        }
     }
-
-    public static int number_gaps(String str1){
+    public static int numberOfDeployment(String temporaryString){
         int k=0;
         int n=0;
-        String str = str1;
         while(k>=0){
-            int value = str.indexOf('[');
+            int value = temporaryString.indexOf('[');
             if(value>=0){
                 n+=1;
-                str=str.substring(value+1);
+                temporaryString=temporaryString.substring(value+1);
             }
-            else {k=-1;}
+            else {k--;}
         }
         return n;
     }
 }
+
