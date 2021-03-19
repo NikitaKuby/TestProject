@@ -1,0 +1,43 @@
+package com.company;
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Scanner str = new Scanner(System.in);
+        String str1 = str.nextLine();
+        Deployment st = new Deployment();
+
+        int n = number_gaps(str1);
+
+        while (n>0) {
+            st.finding_gaps(n,str1);
+            for(int l=n;l>0;l--){
+            if(st.right[0]>st.left[l-1]){
+                str1 = st.decomposition(st.left[l-1],st.right[0]);
+                break;
+                }
+            }
+        n=number_gaps(str1);
+        }
+
+        System.out.println(str1);
+    }
+
+    public static int number_gaps(String str1){
+        int k=0;
+        int n=0;
+        String str = str1;
+        while(k>=0){
+            int value = str.indexOf('[');
+            if(value>=0){
+                n+=1;
+                str=str.substring(value+1);
+            }
+            else {k=-1;}
+        }
+        return n;
+    }
+}

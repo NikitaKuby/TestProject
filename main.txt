@@ -1,0 +1,59 @@
+package com.company;
+
+public class Deployment {
+    int[] left;
+    int[] right;
+    public String str1;
+    public String strmid="";
+
+    public int[] getLeft(){
+        return left;
+    }
+
+    public String getStr(){
+        return str1;
+    }
+
+
+
+    public void finding_gaps(int n,String str1){
+        this.right = new int[n];
+        this.left = new int[n];
+        this.str1=str1;
+        String strright = str1;
+        String strleft = str1;
+        int k=0;
+        int i=0;
+        int l=n;
+        while(l>0){
+            right[i] = strright.indexOf(']')+k;
+            k=right[i]+1;
+            strright=strright.substring(strright.indexOf(']')+1);
+            l-=1;
+            i+=1;
+        }
+
+        k=0;
+        i=0;
+        l=n;
+        while(l>0){
+            left[i] = strleft.indexOf('[')+k;
+            k=left[i]+1;
+            strleft=strleft.substring(strleft.indexOf('[')+1);
+            l-=1;
+            i+=1;
+            }
+    }
+
+    public String decomposition(int left, int right){
+        strmid="";
+        char c = str1.charAt(left-1);
+        int i1 = Character.getNumericValue(c);
+        int x = i1;
+        while(x-1>=0){
+            strmid += str1.substring(left+1,right);
+            x-=1;
+        }
+        return str1.substring(0,left-1)+strmid+str1.substring(right+1);
+    }
+}
